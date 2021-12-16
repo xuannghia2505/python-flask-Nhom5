@@ -1,16 +1,29 @@
 {% extends 'base.html' %}
-{% include 'header.html' %} 
-{% block title %} User {% endblock %} 
+{% include 'header.html' %}
+{% block title %} User {% endblock %}
 {% block body %}
-<a href="/logout" class="float-right" style="margin-top:-20px;">Logout</a>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+{% block css %}
+<style>
+    .active{
+        background-color: rgb(89, 118, 248);
+        border-radius: 20px;
+    }
+</style>
+{% endblock %}
+<nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin-top:-25px;">
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-item nav-link active" href="/user">User <span class="sr-only">(current)</span></a>
-        <a class="nav-item nav-link" href="/food">Food</a>
-        <a class="nav-item nav-link" href="/drink">Drink</a>
-      </div>
+        <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/food">Food</a>
+            <a class="nav-item nav-link" href="/drink">Drink</a>
+            {% if current_user.is_authenticated %}
+            {%if current_user.role == 1 %}
+            <a class="nav-item nav-link active" href="/user">User <span class="sr-only">(current)</span></a>
+            {% endif %}
+            {% endif %}
+        </div>
     </div>
+    <a href="/logout" class="nav-item nav-link float-right">Logout</a>
 </nav>
 <div class="container">
     <div class="row">
@@ -24,8 +37,8 @@
                     </button>
                 </h2>
 
-                {% with messages = get_flashed_messages() %} 
-                {% if messages %} 
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
                 {% for message in messages %}
 
                 <div class="alert alert-success alert-dismissable" role="alert">
@@ -76,7 +89,8 @@
                                             <label>Username:</label>
                                             <input type="hidden" name="id" value="{{row.id}}" />
 
-                                            <input type="text" class="form-control" name="username" value="{{row.username}}" />
+                                            <input type="text" class="form-control" name="username"
+                                                value="{{row.username}}" />
                                         </div>
 
                                         <div class="form-group">
@@ -89,8 +103,7 @@
                                         <div class="form-group">
                                             <label>Role:</label>
 
-                                            <input type="text" class="form-control" name="role"
-                                                value="{{row.role}}" />
+                                            <input type="text" class="form-control" name="role" value="{{row.role}}" />
                                         </div>
 
                                         <div class="form-group">

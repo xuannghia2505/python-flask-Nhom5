@@ -20,7 +20,7 @@ app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeckacdAAAAAHSQu1A2h2ZXnXSrcoAFwIOvyi3d'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeckacdAAAAADOPi7qaBle16terydNyysELh9E1'
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Nghiaoi123@localhost/qlloteria'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/qlloterria'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -81,16 +81,17 @@ def Index():
 def login():
     if current_user.is_authenticated:
         return redirect('/user')
-
+    role = -1
     form = LoginForm()
     if form.validate_on_submit():
         # Kiem tra user co trong db hay khong
         # Thong tin user lay tu form: form.username.data
         user = User.query.filter_by(username=form.username.data).first()
-        # user khong ton tai
+        # user ton tai
         if user is not None:
             #Kiem tra password co khop không 
             password_ok = user.password == form.password.data
+        # user khong ton tai
         if user is None or not password_ok:
             flash('Invalid username or password')
             return redirect('/login')
@@ -108,7 +109,7 @@ def login():
         else:
             next_page = '/user'
         return redirect(next_page)
-    return render_template('login.html', form = form )
+    return render_template('login.html', form = form, role = role )
 
 @app.route('/logout')
 def logout():
@@ -121,7 +122,10 @@ def viewUser():
     if current_user.is_anonymous:
         return redirect('/login')
     data_user=User.query.all()
-    return render_template("qluser.html", data =data_user)
+    if current_user.role == 0:
+        return render_template("qlfood.html", data =data_user)
+    else:
+        return render_template("qluser.html", data =data_user)
 
 @app.route("/insertUser", methods=["POST"])
 def insertUser():

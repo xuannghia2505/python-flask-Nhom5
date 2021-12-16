@@ -1,9 +1,20 @@
 {% extends 'base.html' %} {% block title %} Flask CRUD {% endblock %} 
 {% block body %}
 
-<div class="jumbotron p-3 bg-primary">
+{% block css %}
+<style>
+    .header-image{
+        background-image: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.7) 100%), url('static/images/cuahang.jpg');
+    }
+    .header-image h1{
+        color: orange;
+    }
+</style>
+{% endblock %}
+
+<div class="jumbotron p-3 header-image">
     <div class="well text-center">
-        <h1>Menu Lotterria</h1>
+        <h1>Welcome to Lotterria Group 5</h1>
     </div>
 </div>
 
