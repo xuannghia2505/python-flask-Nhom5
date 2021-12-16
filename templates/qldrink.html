@@ -4,9 +4,19 @@
 
 {% block css %}
 <style>
+    .nav-item{
+        border-radius: 20px;
+        width: 80px;
+        text-align: center;
+        margin-right: 17px;
+    }
     .active{
         background-color: rgb(89, 118, 248);
-        border-radius: 20px;
+    }
+    .nav-item:not(.active):hover{
+        background-color: rgb(160, 160, 160);
+        
+        transition: ease-in 0.3s;
     }
 </style>
 {% endblock %}
