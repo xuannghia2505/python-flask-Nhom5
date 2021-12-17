@@ -1,6 +1,6 @@
 import os
 from App import db
-from App import app
+from App import app,bcrypt
 from flask import render_template, request, redirect, url_for, flash
 from models import Food, User
 from flask_login import login_user, current_user, logout_user, login_required
@@ -32,7 +32,7 @@ def login():
         # user ton tai
         if user is not None:
             # Kiem tra password co khop không
-            password_ok = user.password == form.password.data
+            password_ok =bcrypt.check_password_hash(user.password ,form.password.data) 
         # user khong ton tai
         if user is None or not password_ok:
             flash("Invalid username or password")
@@ -75,20 +75,25 @@ def viewUser():
 
 @app.route("/insertUser", methods=["POST"])
 def insertUser():
-
+    
     if request.method == "POST":
-
+        
         username = request.form["username"]
-        password = request.form["password"]
-        role = request.form["role"]
+        data= User.query.filter_by(username=username).first()
+        if data is None:
+            password = request.form["password"]
+            role = request.form["role"]
 
-        my_data = User(username, password, role)
-        db.session.add(my_data)
-        db.session.commit()
+            my_data = User(username, password, role)
+            db.session.add(my_data)
+            db.session.commit()
 
-        flash("Employee Inserted Successfully")
+            flash("Employee Inserted Successfully")
+            return redirect(url_for("viewUser"))
+        else:
+            flash("User is empty")
+            return redirect(url_for("viewUser"))
 
-        return redirect(url_for("viewUser"))
 
 
 @app.route("/updateUser", methods=["GET", "POST"])

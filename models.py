@@ -1,4 +1,4 @@
-from App import db, login
+from App import db, login , bcrypt
 from flask_login import UserMixin
 
 #Creating model table for our CRUD database
@@ -29,7 +29,7 @@ class User(UserMixin, db.Model):
         return True
     def __init__(self, username, password, role):
         self.username = username
-        self.password = password
+        self.password = bcrypt.generate_password_hash(password)
         self.role = role
 
 @login.user_loader
