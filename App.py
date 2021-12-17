@@ -20,7 +20,7 @@ app.config['RECAPTCHA_PUBLIC_KEY'] = '6LeckacdAAAAAHSQu1A2h2ZXnXSrcoAFwIOvyi3d'
 app.config['RECAPTCHA_PRIVATE_KEY'] = '6LeckacdAAAAADOPi7qaBle16terydNyysELh9E1'
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/qlloterria'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:Nghiaoi123@localhost/qlloteria'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -72,10 +72,16 @@ def load_user(id):
     return User.query.get(int(id))
 
 @app.route("/")
-@app.route("/menu")
+@app.route("/menu", methods=['GET','POST'])
 def Index():
-    data = Food.query.all()
-    return render_template("menu.html", data =data)
+    if request.method == "POST":
+        key = request.form["key"]
+        data = Food.query.filter(Food.foodname.like('%'+key+'%')).all()    
+    else:
+        data = Food.query.all()
+    if len(data)<1:
+        flash('No result')
+    return render_template("menu.html", data = data)
 
 @app.route('/login', methods=['GET','POST'])
 def login():
